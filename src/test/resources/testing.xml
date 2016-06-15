@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Test suite" parallel="classes" thread-count="1">
+    <test name="challenge_tests" verbose="1" annotations="JDK" thread-count="2">
+        <packages>
+            <package name="me.shpionkaz.automation.challenge"/>
+        </packages>
+    </test>
+</suite>
