@@ -1,4 +1,4 @@
-package me.shpionkaz.automation.challenge;
+package com.shpionkaz.automation.challenge;
 
 import org.testng.annotations.Test;
 
