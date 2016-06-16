@@ -5,8 +5,7 @@ import com.typesafe.config.ConfigFactory;
 
 public class Configuration {
 
-    private Configuration() {
-    }
+    private Configuration() {}
 
     private final static Config config = ConfigFactory.load().getConfig("berlinPragueChallenge");
 

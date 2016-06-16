@@ -27,10 +27,12 @@ public class TestExecutionListener implements ITestListener {
 
     @Override
     public void onTestSkipped(ITestResult iTestResult) {
+        logger.error(iTestResult.getName() + " skipped ", iTestResult.getThrowable());
     }
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
+        logger.error(iTestResult.getName() + " failed, but within success percentage ", iTestResult.getThrowable());
     }
 
     @Override
