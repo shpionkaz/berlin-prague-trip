@@ -35,4 +35,11 @@ public class TestUtils {
 
         return targetFile.getAbsolutePath();
     }
+
+    public static void prepareChromeDriver(){
+        ClassLoader classLoader = TestUtils.class.getClassLoader();
+        File chromedriver = new File(classLoader.getResource("chromedriver").getFile());
+        chromedriver.setExecutable(true);
+        System.setProperty("webdriver.chrome.driver", chromedriver.getAbsolutePath());
+    }
 }
