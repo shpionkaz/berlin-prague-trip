@@ -12,6 +12,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SearchResultsTest extends BaseTest {
 
+    private LandingPage landingPage;
+    private SearchResultsPage searchResultsPage;
+
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
         super.setUp();
@@ -19,6 +22,8 @@ public class SearchResultsTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void setUpTest() {
+        landingPage = new LandingPage(driver);
+        searchResultsPage = new SearchResultsPage(driver);
     }
 
     @AfterClass(alwaysRun = true)
@@ -32,22 +37,58 @@ public class SearchResultsTest extends BaseTest {
     }
 
     @Test
-    public void testPriceSoringIsCorrectWithEnabledCheapestFilter() throws Exception {
-        LandingPage landingPage = new LandingPage(driver);
+    public void testPriceSoringIsCorrectWithEnabledCheapestFilterForTrains(){
         landingPage.goToPage();
         landingPage.validatePage();
         landingPage.fillArrivalField("Prague");
         landingPage.fillDepartureField("Berlin");
         landingPage.blurInputFocus();
         landingPage.toggleAirbnbCheckBox();
-        SearchResultsPage searchResultsPage = landingPage.submitForm();
+        landingPage.submitForm();
         searchResultsPage.validatePage();
         searchResultsPage.selectCheapestFilter();
-        List<BigDecimal> prices = searchResultsPage.extractPrices();
-        List<BigDecimal> sortedPrices = searchResultsPage.sortPrices();
+
+        String trainsTabId = searchResultsPage.clickTrainsTab();
+        List<BigDecimal> prices = searchResultsPage.extractPrices(trainsTabId);
+        List<BigDecimal> sortedPrices = searchResultsPage.sortPrices(prices);
 
         assertThat(prices, equalTo(sortedPrices));
+    }
 
+    @Test
+    public void testPriceSoringIsCorrectWithEnabledCheapestFilterForFlights(){
+        landingPage.goToPage();
+        landingPage.validatePage();
+        landingPage.fillArrivalField("Prague");
+        landingPage.fillDepartureField("Berlin");
+        landingPage.blurInputFocus();
+        landingPage.toggleAirbnbCheckBox();
+        landingPage.submitForm();
+        searchResultsPage.validatePage();
+        searchResultsPage.selectCheapestFilter();
 
+        String planesTabId = searchResultsPage.clickPlanesTab();
+        List<BigDecimal> prices = searchResultsPage.extractPrices(planesTabId);
+        List<BigDecimal> sortedPrices = searchResultsPage.sortPrices(prices);
+
+        assertThat(prices, equalTo(sortedPrices));
+    }
+
+    @Test
+    public void testPriceSoringIsCorrectWithEnabledCheapestFilterForBuses(){
+        landingPage.goToPage();
+        landingPage.validatePage();
+        landingPage.fillArrivalField("Prague");
+        landingPage.fillDepartureField("Berlin");
+        landingPage.blurInputFocus();
+        landingPage.toggleAirbnbCheckBox();
+        landingPage.submitForm();
+        searchResultsPage.validatePage();
+        searchResultsPage.selectCheapestFilter();
+        String busesTabId = searchResultsPage.clickBusesTab();
+        List<BigDecimal> prices = searchResultsPage.extractPrices(busesTabId);
+        List<BigDecimal> sortedPrices = searchResultsPage.sortPrices(prices);
+
+        assertThat(prices, equalTo(sortedPrices));
     }
 }

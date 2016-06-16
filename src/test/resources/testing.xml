@@ -1,5 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Test suite" parallel="classes" thread-count="1">
+    <listeners>
+        <listener class-name="com.shpionkaz.automation.challenge.TestExecutionListener"/>
+    </listeners>
+
     <test name="challenge_tests" verbose="1" annotations="JDK" thread-count="2">
         <packages>
             <package name="com.shpionkaz.automation.challenge"/>

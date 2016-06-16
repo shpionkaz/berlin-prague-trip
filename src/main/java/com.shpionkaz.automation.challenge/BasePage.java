@@ -6,14 +6,18 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.shpionkaz.automation.challenge.utils.TestUtils.*;
+import static com.shpionkaz.automation.challenge.utils.TestUtils.waitForPageLoad;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 
 public abstract class BasePage {
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected WebDriver driver;
 
@@ -29,12 +33,15 @@ public abstract class BasePage {
     }
 
     public void goToPage() {
-        driver.get(getFullPageUrl());
+        String pageUrl = getFullPageUrl();
+        logger.info("Switched to page with url " + pageUrl);
+        driver.get(pageUrl);
     }
 
     public void validatePage() {
         ExpectedCondition pageValidationCondition = validationCondition();
         waitForPageLoad(driver, pageValidationCondition);
+        logger.info("Initial page " + getPageUrl() + " validation, checking for elements ...");
         assertThat(driver.getCurrentUrl(), startsWith(getFullPageUrl()));
     }
 

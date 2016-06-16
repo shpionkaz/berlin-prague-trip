@@ -4,8 +4,8 @@ package com.shpionkaz.automation.challenge.results.page;
 import com.google.common.collect.Lists;
 import com.shpionkaz.automation.challenge.BasePage;
 import com.shpionkaz.automation.challenge.Configuration;
-import com.shpionkaz.automation.challenge.results.data.SearchResultsPageConstants;
-import com.shpionkaz.automation.challenge.utils.TestUtils;
+import com.shpionkaz.automation.challenge.results.data.SearchResultsPageProviders;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SearchResultsPage extends BasePage implements SearchResultsPageConstants {
+public class SearchResultsPage extends BasePage implements SearchResultsPageProviders {
 
     @FindBy(how = How.ID, using = "tab_train")
     private WebElement transTab;
@@ -28,9 +28,6 @@ public class SearchResultsPage extends BasePage implements SearchResultsPageCons
 
     @FindBy(how = How.ID, using = "tab_bus")
     private WebElement busesTab;
-
-    @FindBy(how = How.CSS, using = "#results-train .price-no")
-    private List<WebElement> priceCellsTrain;
 
     @FindBy(how = How.ID, using = "sortby-price")
     private WebElement priceSortingFilter;
@@ -49,37 +46,61 @@ public class SearchResultsPage extends BasePage implements SearchResultsPageCons
     }
 
     public void selectCheapestFilter() {
+        logger.info("Selected on Cheapest filter");
         priceSortingFilter.click();
     }
 
-    public void selectFastestFilter() {
-        priceSortingFilter.click();
+    public String clickPlanesTab() {
+        logger.info("Clicked on PlainsTab filter");
+        planesTab.click();
+        return planesTab.getAttribute("id");
     }
 
-    public List<BigDecimal> extractPrices() {
-        TestUtils.sleep(2);
+    public String clickTrainsTab() {
+        logger.info("Clicked on TrainsTab filter");
+        transTab.click();
+        return transTab.getAttribute("id");
+    }
+
+    public String clickBusesTab() {
+        logger.info("Clicked on BusesTab filter");
+        busesTab.click();
+        return busesTab.getAttribute("id");
+    }
+
+    public List<BigDecimal> extractPrices(String activeTabId) {
+        logger.info("Extracting prises from the activeTab " + activeTabId);
+
         List<BigDecimal> prices = Lists.newArrayList();
-        for (WebElement priceCell : priceCellsTrain) {
+
+        List<WebElement> pricesElements = driver.findElements(By.cssSelector("#"+activeTabId+" .price-no"));
+        for (WebElement priceCell : pricesElements) {
             String text = priceCell.getText();
-            double value = Double.valueOf(text.replaceAll("[^(\\d|\\.)]+", ""));
-            prices.add(BigDecimal.valueOf(value));
+            prices.add(extractPriceFromString(text));
         }
+        logger.info("Extracted prises " + prices);
         return prices;
     }
 
-    public List<BigDecimal> sortPrices() {
-        List<BigDecimal> prises = extractPrices();
-        Collections.sort(prises, new Comparator<BigDecimal>() {
+    private BigDecimal extractPriceFromString(String rawText) {
+        String regex = "[^(\\d|\\.)]+";
+        double value = Double.valueOf(rawText.replaceAll(regex, ""));
+        return BigDecimal.valueOf(value);
+    }
+
+    public List<BigDecimal> sortPrices(List<BigDecimal> prices) {
+        Collections.sort(prices, new Comparator<BigDecimal>() {
             @Override
             public int compare(BigDecimal a, BigDecimal b) {
                 return a.compareTo(b);
             }
         });
-        return prises;
+        return prices;
     }
 
     @Override
     protected ExpectedCondition validationCondition() {
+        logger.info("Validating fields presence");
         return ExpectedConditions.visibilityOfAllElements(Lists.newArrayList(
                 transTab,
                 busesTab,
