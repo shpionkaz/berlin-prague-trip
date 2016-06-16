@@ -20,21 +20,19 @@ import java.util.List;
 
 public class SearchResultsPage extends BasePage implements SearchResultsPageProviders {
 
-    @FindBy(how = How.ID, using = "tab_train")
+    /**
+     * ID
+     */
+    @FindBy(how = How.ID, using = TrainsTab)
     private WebElement transTab;
-
-    @FindBy(how = How.ID, using = "tab_flight")
+    @FindBy(how = How.ID, using = PlanesTab)
     private WebElement planesTab;
-
-    @FindBy(how = How.ID, using = "tab_bus")
+    @FindBy(how = How.ID, using = BusesTab)
     private WebElement busesTab;
-
-    @FindBy(how = How.ID, using = "sortby-price")
+    @FindBy(how = How.ID, using = PriceSortingFilter)
     private WebElement priceSortingFilter;
-
-    @FindBy(how = How.ID, using = "sortby-traveltime")
+    @FindBy(how = How.ID, using = TravelTimeSortingFilter)
     private WebElement travelTimeSortingFilter;
-
 
     public SearchResultsPage(WebDriver driver) {
         super(driver);
@@ -44,6 +42,9 @@ public class SearchResultsPage extends BasePage implements SearchResultsPageProv
     public String getPageUrl() {
         return Configuration.SEARCH_RESULTS_URL;
     }
+    /**
+     * METHODS
+     */
 
     public void selectCheapestFilter() {
         logger.info("Selected on Cheapest filter");
@@ -69,7 +70,7 @@ public class SearchResultsPage extends BasePage implements SearchResultsPageProv
     }
 
     public List<BigDecimal> extractPrices(String activeTabId) {
-        logger.info("Extracting prises from the activeTab " + activeTabId);
+        logger.info("Extracting prices from the activeTab " + activeTabId);
 
         List<BigDecimal> prices = Lists.newArrayList();
 
@@ -78,7 +79,7 @@ public class SearchResultsPage extends BasePage implements SearchResultsPageProv
             String text = priceCell.getText();
             prices.add(extractPriceFromString(text));
         }
-        logger.info("Extracted prises " + prices);
+        logger.info("Extracted prices " + prices);
         return prices;
     }
 
