@@ -13,18 +13,21 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LandingPage extends BasePage implements LandingPageProviders {
 
+    /**
+     * ID
+     */
     @FindBy(how = How.ID, using = DepartureInput)
     private WebElement departureInputFilter;
-
     @FindBy(how = How.ID, using = ArrivalInput)
     private WebElement arrivalInputFilter;
-
     @FindBy(how = How.ID, using = SearchFormSubmitButton)
     private WebElement submitFormButton;
 
+    /**
+     * CSS
+     */
     @FindBy(how = How.CSS, using = Body)
     private WebElement body;
-
     @FindBy(how = How.CSS, using = AirbnbCheckbox)
     private WebElement airbnbCheckbox;
 
@@ -38,13 +41,17 @@ public class LandingPage extends BasePage implements LandingPageProviders {
         return Configuration.LANDING_PAGE_URL;
     }
 
+    /**
+     * METHODS
+     */
+
     public void fillDepartureField(String departure) {
-        logger.info("Filling departure input filed with value " + departure);
+        logger.info("Filling departure input field with value " + departure);
         departureInputFilter.sendKeys(departure);
     }
 
     public void fillArrivalField(String destination) {
-        logger.info("Filling arrival input filed with value " + destination);
+        logger.info("Filling arrival input field with value " + destination);
         arrivalInputFilter.sendKeys(destination);
     }
 
